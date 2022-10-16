@@ -1,0 +1,68 @@
+receivers:
+  # Data sources: traces, metrics, logs
+  otlp:
+    protocols:
+      grpc:
+      http:
+  jaeger:
+    protocols:
+      grpc:
+      thrift_binary:
+      thrift_compact:
+      thrift_http:
+  zipkin:
+
+exporters:  
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+
+  # Data sources: metrics
+  prometheusremotewrite:
+    endpoint: "http://jaeger:9411/api/prom/push"
+    # For offical Prometheus (e.g. running via Docker)
+    # endpoint: 'http://prometheus:9090/api/v1/write'
+    tls:
+      insecure: true
+
+  zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans"
+    format: proto
+
+  # Data sources: traces
+  jaeger:
+    endpoint: "jaeger:14250"
+    tls:
+      insecure: true
+
+  logging:
+    loglevel: debug
+
+  # Export to a file
+  file:
+    path: /etc/output/logs.json
+
+processors:
+  batch:
+
+extensions:
+  health_check:
+  pprof:
+    endpoint: :1888
+  zpages:
+    endpoint: :55679
+
+service:
+  extensions: [pprof, zpages, health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, zipkin, jaeger]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, file]

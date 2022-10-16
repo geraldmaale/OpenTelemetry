@@ -1,0 +1,13 @@
+traces:
+  configs:
+  - name: default
+    remote_write:
+      - endpoint: tempo-us-central1.grafana.net:443
+        basic_auth:
+          username: 300652 # <Your Grafana.com Tempo username>
+          password: eyJrIjoiNGM4MDEyM2ZhZjc5NzJkMTVmOWZkOTdkMjA2YmI3MWViYmY4YWM4NiIsIm4iOiJ0ZW1wby1sb2NhbCIsImlkIjo3MjY2MDN9 # <Your Grafana.com Tempo password>
+
+    receivers:
+      otlp:
+        protocols:
+          grpc:
