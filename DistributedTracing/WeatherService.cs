@@ -71,7 +71,6 @@ public static class WeatherService
                 //Log.Information("Weather forecast retrieved in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
                 var ats = activity?.StartTimeUtc.Add(ts) - activity?.StartTimeUtc;
 
-                //diagnosticContext.Set("UserId", "gematt");
                 app.Logger.LogInformation("Successful!!!!!!!!!!!");
 
                 // Recording the event
